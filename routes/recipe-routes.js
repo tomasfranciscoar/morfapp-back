@@ -4,8 +4,7 @@ const Recipe = require("../models/Recipe");
 
 recipeRouter.post("/new", (req, res) => {
   // const {_id: author} = req.user;
-  const {name, ingredients, difficulty, image} = req.body;
-  Recipe.create({ name, ingredients, difficulty, image })
+  Recipe.create({ ...req.body/*, author */ })
   .then(recipe => {
     res.status(200).json({recipe})
   })
@@ -15,6 +14,8 @@ recipeRouter.post("/new", (req, res) => {
       message: "An error occurred while uploading the recipe"
     })
   })
-})
+});
+
+
 
 module.exports = recipeRouter;
