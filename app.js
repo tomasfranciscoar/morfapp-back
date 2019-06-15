@@ -8,10 +8,11 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const cors         = require('cors')
 
 
 mongoose
-  .connect('mongodb://localhost/morfapp-back', {useNewUrlParser: true})
+  .connect(process.env.DB, {useNewUrlParser: true})
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -49,10 +50,18 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
+app.use(cors({
+  credentials: true,
+  origin: ['http://localhost:3000']
+}))
 
-
+// routes middleware:
 const index = require('./routes/index');
 app.use('/', index);
+const auth = require('./routes/auth-routes');
+app.use('/', auth);
+const recipe = require('./routes/recipe-routes');
+app.use('/recipe', recipe);
 
 
 module.exports = app;
