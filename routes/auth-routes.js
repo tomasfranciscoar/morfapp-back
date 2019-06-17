@@ -10,6 +10,7 @@ authRouter.post("/signup", (req, res) => {
   const hashedPassword = bcrypt.hashSync(req.body.password, salt);
   User.create({ ...req.body, password: hashedPassword })
     .then(user => {
+      req.user = user;
       jwt.sign(
         { id: user._id },
         process.env.SECRET,
@@ -45,7 +46,7 @@ authRouter.post("/login", (req, res) => {
         message: "Incorrect password"
       });
     }
-
+    req.user = user;
     jwt.sign(
       { id: user._id },
       process.env.SECRET,

@@ -1,10 +1,11 @@
 const express = require("express");
 const recipeRouter = express.Router();
 const Recipe = require("../models/Recipe");
+const uploadCloud = require("../helpers/cloudinary-helper");
 
-recipeRouter.post("/new", (req, res) => {
+recipeRouter.post("/new", uploadCloud.array("images"), (req, res) => {
   // const {_id: author} = req.user;
-  Recipe.create({ ...req.body/*, author */ })
+  Recipe.create({ ...req.body/*, author */})
   .then(recipe => {
     res.status(200).json({recipe})
   })
