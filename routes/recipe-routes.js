@@ -19,6 +19,17 @@ recipeRouter.post("/new", uploadCloud.array("images"), (req, res) => {
   })
 });
 
-
+recipeRouter.get("/", (req, res) => {
+  Recipe.find()
+  .then(recipe => {
+    res.status(200).json({recipe})
+  })
+  .catch(error => {
+    res.status(500).json({
+      error,
+      message: "An error occurred while retrieving the recipies"
+    })
+  })
+})
 
 module.exports = recipeRouter;
