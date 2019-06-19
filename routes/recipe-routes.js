@@ -27,7 +27,21 @@ recipeRouter.get("/", (req, res) => {
   .catch(error => {
     res.status(500).json({
       error,
-      message: "An error occurred while retrieving the recipies"
+      message: "An error occurred while retrieving the recipes"
+    })
+  })
+})
+
+recipeRouter.get("/:id", (req, res) => {
+  const {id} = req.params;
+  Recipe.findById(id)
+  .then(recipe => {
+    res.status(200).json({recipe})
+  })
+  .catch(error => {
+    res.status(404).json({
+      error,
+      message: "An error occurred while retrieving the recipe"
     })
   })
 })
