@@ -46,7 +46,7 @@ authRouter.post("/login", (req, res) => {
         message: "Incorrect password"
       });
     }
-    req.user = user;
+    console.log('el req punto user: ', req.user)
     jwt.sign(
       { id: user._id },
       process.env.SECRET,

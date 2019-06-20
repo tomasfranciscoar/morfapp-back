@@ -3,6 +3,7 @@ const recipeRouter = express.Router();
 const Recipe = require("../models/Recipe");
 const uploadCloud = require("../helpers/cloudinary-helper");
 
+// create new recipe
 recipeRouter.post("/new", uploadCloud.array("images"), (req, res) => {
   // const {_id: author} = req.user;
   console.log('el req.user: ', req.user)
@@ -19,6 +20,7 @@ recipeRouter.post("/new", uploadCloud.array("images"), (req, res) => {
   })
 });
 
+// get custom recipes
 recipeRouter.get("/", (req, res) => {
   Recipe.find()
   .then(recipe => {
@@ -32,6 +34,7 @@ recipeRouter.get("/", (req, res) => {
   })
 })
 
+// get unique custom recipes
 recipeRouter.get("/:id", (req, res) => {
   const {id} = req.params;
   Recipe.findById(id)
@@ -44,6 +47,40 @@ recipeRouter.get("/:id", (req, res) => {
       message: "An error occurred while retrieving the recipe"
     })
   })
-})
+});
+
+// update recipe
+recipeRouter.patch("/:id", (req, res) => {
+  const { id } = req.params;
+  // const { _id: author } = req.user;
+
+  Recipe.findOneAndUpdate({ _id: id/*, author*/ }, { $set: req.body })
+    .then(recipe => {
+      res.status(200).json({ recipe });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "There was an error editing the recipe",
+      });
+    });
+});
+
+// delete recipe
+recipeRouter.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  // const { _id: author } = req.user;
+
+  Recipe.findOneAndRemove({ _id: id/*, author*/ })
+    .then(recipe => {
+      res.status(200).json({ recipe });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "There was an error deleting the recipe",
+      });
+    });
+});
 
 module.exports = recipeRouter;
