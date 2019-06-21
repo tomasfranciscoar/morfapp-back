@@ -5,10 +5,8 @@ const uploadCloud = require("../helpers/cloudinary-helper");
 
 // create new recipe
 recipeRouter.post("/new", uploadCloud.array("images"), (req, res) => {
-  // const {_id: author} = req.user;
-  console.log('el req.user: ', req.user)
   const images = req.files.map(file => file.secure_url)
-  Recipe.create({ ...req.body/*, author */, images})
+  Recipe.create({ ...req.body, images})
   .then(recipe => {
     res.status(200).json({recipe})
   })
