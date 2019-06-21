@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "DEBUG=morfapp-back:* nodemon ./bin/www",
+    "deploy": "cd .. && git subtree push --prefix morfapp-back heroku master",
     "dev-windows": "nodemon ./bin/www"
   },
   "dependencies": {
