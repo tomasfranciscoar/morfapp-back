@@ -27,6 +27,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  profilePicture: {
+    type: String,
+    default: "../public/static/media/default-user-image.png"
+  },
   role: {
     type: String,
     enum: ['admin', 'user'],
