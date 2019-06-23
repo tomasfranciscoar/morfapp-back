@@ -46,7 +46,7 @@ authRouter.post("/login", (req, res) => {
         message: "Incorrect password"
       });
     }
-    console.log('el req punto user: ', req.user)
+    console.log("el req punto user: ", req.user);
     jwt.sign(
       { id: user._id },
       process.env.SECRET,
@@ -57,6 +57,20 @@ authRouter.post("/login", (req, res) => {
       }
     );
   });
+});
+
+authRouter.patch("/profile/:id", (req, res) => {
+  const { id } = req.params;
+  User.findOneAndUpdate({ _id: id }, { $set: req.body })
+    .then(profile => {
+      res.status(200).json({ profile });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "There was an error editing your profile"
+      });
+    });
 });
 
 module.exports = authRouter;
