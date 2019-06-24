@@ -2,6 +2,7 @@ const express = require("express");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const uploadCloud = require("../helpers/cloudinary-helper");
 
 const User = require("../models/User");
 
@@ -59,9 +60,11 @@ authRouter.post("/login", (req, res) => {
   });
 });
 
-authRouter.patch("/profile/:id", (req, res) => {
+authRouter.patch("/profile/:id", uploadCloud.single("profilePicture"), (req, res) => {
   const { id } = req.params;
-  User.findOneAndUpdate({ _id: id }, { $set: req.body })
+  console.log('el req file: ', req.file)
+  const profilePicture = req.file.secure_url;
+  User.findOneAndUpdate({ _id: id }, { $set: req.body, profilePicture })
     .then(profile => {
       res.status(200).json({ profile });
     })
