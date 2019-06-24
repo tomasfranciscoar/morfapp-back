@@ -9,6 +9,12 @@ const User = require("../models/User");
 authRouter.post("/signup", (req, res) => {
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+  if(req.body.password.length < 8){
+    return res.status(400).json({
+      error: {},
+      message: "Your password is not long enough."
+    })
+  };
   User.create({ ...req.body, password: hashedPassword })
     .then(user => {
       req.user = user;
@@ -25,7 +31,7 @@ authRouter.post("/signup", (req, res) => {
     .catch(err => {
       res.status(500).json({
         err,
-        message: "There was an error creating your user"
+        message: "There was an error creating your user."
       });
     });
 });
@@ -36,7 +42,7 @@ authRouter.post("/login", (req, res) => {
     if (!user) {
       return res.status(404).json({
         error: {},
-        message: "Incorrect e-mail"
+        message: "Incorrect username"
       });
     }
 
@@ -47,7 +53,7 @@ authRouter.post("/login", (req, res) => {
         message: "Incorrect password"
       });
     }
-    console.log("el req punto user: ", req.user);
+    
     jwt.sign(
       { id: user._id },
       process.env.SECRET,
