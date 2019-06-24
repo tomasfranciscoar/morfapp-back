@@ -19,8 +19,8 @@ const recipeSchema = new Schema({
     enum: ['Beginner', 'Amateur', 'Semi-Pro', 'Professional', 'World Class']
   },
   images: {
-    type: [String],
-    default: ["https://topekacivictheatre.com/wp-content/uploads/2019/01/no-image.jpg"]
+    type: String,
+    default: "https://topekacivictheatre.com/wp-content/uploads/2019/01/no-image.jpg"
   }
 }, {
   timestamps: true

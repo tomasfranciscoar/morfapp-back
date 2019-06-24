@@ -4,8 +4,8 @@ const Recipe = require("../models/Recipe");
 const uploadCloud = require("../helpers/cloudinary-helper");
 
 // create new recipe
-recipeRouter.post("/new", uploadCloud.array("images"), (req, res) => {
-  const images = req.files.map(file => file.secure_url)
+recipeRouter.post("/new", uploadCloud.single("images"), (req, res) => {
+  const images = req.file.secure_url;
   Recipe.create({ ...req.body, images})
   .then(recipe => {
     res.status(200).json({recipe})
@@ -46,6 +46,21 @@ recipeRouter.get("/:id", (req, res) => {
     })
   })
 });
+
+// get my custom recipes
+recipeRouter.get("/myrecipes/:id", (req, res) => {
+  const {id} = req.params;
+  Recipe.find({author: id})
+    .then(recipes => {
+      res.status(200).json({recipes})
+    })
+    .catch(error => {
+      res.status(404).json({
+        error,
+        message: "An error occure while retrieving your recipes"
+      })
+    })
+})
 
 // update recipe
 recipeRouter.patch("/:id", (req, res) => {
