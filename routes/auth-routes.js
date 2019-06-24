@@ -60,20 +60,37 @@ authRouter.post("/login", (req, res) => {
   });
 });
 
-authRouter.patch("/profile/:id", uploadCloud.single("profilePicture"), (req, res) => {
+authRouter.get("/profile/:id", (req, res) => {
   const { id } = req.params;
-  console.log('el req file: ', req.file)
-  const profilePicture = req.file.secure_url;
-  User.findOneAndUpdate({ _id: id }, { $set: req.body, profilePicture })
+  User.findById(id)
     .then(profile => {
       res.status(200).json({ profile });
     })
     .catch(error => {
       res.status(500).json({
         error,
-        message: "There was an error editing your profile"
+        message: "Error retrieving your profile"
       });
     });
 });
+
+authRouter.patch(
+  "/profile/:id",
+  uploadCloud.single("profilePicture"),
+  (req, res) => {
+    const { id } = req.params;
+    const profilePicture = req.file.secure_url;
+    User.findOneAndUpdate({ _id: id }, { $set: req.body, profilePicture })
+      .then(profile => {
+        res.status(200).json({ profile });
+      })
+      .catch(error => {
+        res.status(500).json({
+          error,
+          message: "There was an error editing your profile"
+        });
+      });
+  }
+);
 
 module.exports = authRouter;
