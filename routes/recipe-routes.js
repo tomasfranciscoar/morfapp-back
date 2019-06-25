@@ -17,6 +17,21 @@ recipeRouter.post("/comment", (req, res) => {
         message: "There was an error posting your comment"
       })
     })
+});
+
+// get comments for recipe
+recipeRouter.get("/comment/:id", (req, res) => {
+  const {id} = req.params;
+  Comment.find({recipe: id})
+    .then(comments => {
+      res.status(200).json({comments})
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "An error occurred while retrieving the comments"
+      })
+    })
 })
 
 // create new recipe

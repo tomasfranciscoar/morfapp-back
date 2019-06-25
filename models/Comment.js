@@ -8,7 +8,13 @@ const commentSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId,
     ref: "User",
+  },
+  recipe: {
+    type: Schema.Types.ObjectId,
+    ref: "Recipe",
   }
+}, {
+  timestamps: true
 })
 
 module.exports = mongoose.model("Comment", commentSchema)
