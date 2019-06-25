@@ -21,6 +21,10 @@ const recipeSchema = new Schema({
   images: {
     type: String,
     default: "https://topekacivictheatre.com/wp-content/uploads/2019/01/no-image.jpg"
+  },
+  likes: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

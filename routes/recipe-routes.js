@@ -65,9 +65,8 @@ recipeRouter.get("/myrecipes/:id", (req, res) => {
 // update recipe
 recipeRouter.patch("/:id", (req, res) => {
   const { id } = req.params;
-  // const { _id: author } = req.user;
-
-  Recipe.findOneAndUpdate({ _id: id/*, author*/ }, { $set: req.body })
+  console.log(req.body)
+  Recipe.findOneAndUpdate({ _id: id }, { $set: req.body })
     .then(recipe => {
       res.status(200).json({ recipe });
     })
