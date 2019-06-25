@@ -1,7 +1,23 @@
 const express = require("express");
 const recipeRouter = express.Router();
 const Recipe = require("../models/Recipe");
+const Comment = require("../models/Comment")
 const uploadCloud = require("../helpers/cloudinary-helper");
+
+
+// add comment
+recipeRouter.post("/comment", (req, res) => {
+  Comment.create({...req.body})
+    .then(comment => {
+      res.status(200).json({ comment })
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "There was an error posting your comment"
+      })
+    })
+})
 
 // create new recipe
 recipeRouter.post("/new", uploadCloud.single("images"), (req, res) => {
