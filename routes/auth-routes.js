@@ -101,4 +101,19 @@ authRouter.patch(
   }
 );
 
+authRouter.patch("/profile/favs/:recipeId", (req, res) => {
+  const userId = req.body.favs;
+  const { recipeId } = req.params;
+  User.findOneAndUpdate({ _id: userId }, { $push: {favs: recipeId}})
+    .then(profile => {
+      res.status(200).json({profile})
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "There was an error setting your favourite"
+      });
+    });
+})
+
 module.exports = authRouter;
