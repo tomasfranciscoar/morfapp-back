@@ -3,6 +3,7 @@ const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const uploadCloud = require("../helpers/cloudinary-helper");
+const authUtils = require("../helpers/auth-helper");
 
 const User = require("../models/User");
 
@@ -66,7 +67,7 @@ authRouter.post("/login", (req, res) => {
   });
 });
 
-authRouter.get("/profile/:id", (req, res) => {
+authRouter.get("/profile/:id", authUtils.verifyToken, (req, res) => {
   const { id } = req.params;
   User.findById(id)
     .then(profile => {
@@ -82,6 +83,7 @@ authRouter.get("/profile/:id", (req, res) => {
 
 authRouter.patch(
   "/profile/:id",
+  authUtils.verifyToken,
   uploadCloud.single("profilePicture"),
   (req, res) => {
     const { id } = req.params;
