@@ -69,7 +69,7 @@ authRouter.post("/login", (req, res) => {
 
 authRouter.get("/profile/:id", authUtils.verifyToken, (req, res) => {
   const { id } = req.params;
-  User.findById(id)
+  User.findById(id).populate("favs")
     .then(profile => {
       res.status(200).json({ profile });
     })
@@ -101,10 +101,11 @@ authRouter.patch(
   }
 );
 
-authRouter.patch("/profile/favs/:recipeId", (req, res) => {
+authRouter.patch("/profile/favs/:id", (req, res) => {
   const userId = req.body.favs;
-  const { recipeId } = req.params;
-  User.findOneAndUpdate({ _id: userId }, { $push: {favs: recipeId}})
+  const { id } = req.params;
+  console.log('el userid: ', userId, 'y el recipeid: ', id)
+  User.findOneAndUpdate({ _id: userId }, { $push: {favs: id}})
     .then(profile => {
       res.status(200).json({profile})
     })
@@ -114,6 +115,6 @@ authRouter.patch("/profile/favs/:recipeId", (req, res) => {
         message: "There was an error setting your favourite"
       });
     });
-})
+});
 
 module.exports = authRouter;

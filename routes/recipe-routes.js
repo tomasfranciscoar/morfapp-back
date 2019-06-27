@@ -4,6 +4,8 @@ const Recipe = require("../models/Recipe");
 const Comment = require("../models/Comment");
 const uploadCloud = require("../helpers/cloudinary-helper");
 const authUtils = require("../helpers/auth-helper");
+const User = require("../models/User");
+const ObjectId = require('mongodb').ObjectID;
 
 // add comment
 recipeRouter.post("/comment", (req, res) => {
@@ -110,11 +112,9 @@ recipeRouter.patch("/:id", (req, res) => {
 });
 
 // delete recipe
-recipeRouter.delete("/:id", authUtils.verifyToken, (req, res) => {
+recipeRouter.delete("/:id", (req, res) => {
   const { id } = req.params;
-  // const { _id: author } = req.user;
-
-  Recipe.findOneAndRemove({ _id: id /*, author*/ })
+  Recipe.findOneAndRemove({ _id: id })
     .then(recipe => {
       res.status(200).json({ recipe });
     })
@@ -125,5 +125,19 @@ recipeRouter.delete("/:id", authUtils.verifyToken, (req, res) => {
       });
     });
 });
+
+recipeRouter.get("/favs/:id", (req, res) => {
+  const { id } = req.params;
+  User.find({favs: {$in: [ObjectId(id)]}})
+    .then(users => {
+      res.status(200).json({users})
+    })
+    .catch(error => {
+      res.status(500).json({
+        error,
+        message: "There was an error retrieving the favs"
+      });
+    });
+})
 
 module.exports = recipeRouter;
