@@ -11,7 +11,7 @@ const ObjectId = require('mongodb').ObjectID;
 recipeRouter.post("/comment", (req, res) => {
 
   console.log('el commento: ', req.body.comment)
-  if(req.body.comment === undefined) return;
+  if(req.body.comment === undefined || req.body.comment === "") return;
 
   Comment.create({ ...req.body })
     .then(comment => {
