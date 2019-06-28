@@ -103,9 +103,8 @@ authRouter.patch(
 
 authRouter.patch("/profile/favs/:id", (req, res) => {
   const userId = req.body.favs;
-  const { id } = req.params;
-  console.log('el userid: ', userId, 'y el recipeid: ', id)
-  User.findOneAndUpdate({ _id: userId }, { $push: {favs: id}})
+  const { id } = req.params;  
+  User.findOneAndUpdate({ _id: userId, favs: {$nin: id} }, { $push: {favs: id}})
     .then(profile => {
       res.status(200).json({profile})
     })

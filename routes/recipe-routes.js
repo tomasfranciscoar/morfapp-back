@@ -9,6 +9,10 @@ const ObjectId = require('mongodb').ObjectID;
 
 // add comment
 recipeRouter.post("/comment", (req, res) => {
+
+  console.log('el commento: ', req.body.comment)
+  if(req.body.comment === undefined) return;
+
   Comment.create({ ...req.body })
     .then(comment => {
       res.status(200).json({ comment });
@@ -112,7 +116,7 @@ recipeRouter.patch("/:id", (req, res) => {
 });
 
 // delete recipe
-recipeRouter.delete("/:id", (req, res) => {
+recipeRouter.delete("/:id", authUtils.verifyToken, (req, res) => {
   const { id } = req.params;
   Recipe.findOneAndRemove({ _id: id })
     .then(recipe => {
