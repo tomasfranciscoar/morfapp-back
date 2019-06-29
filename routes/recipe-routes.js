@@ -43,7 +43,9 @@ recipeRouter.get("/comment/:id", (req, res) => {
 
 // create new recipe
 recipeRouter.post("/new", uploadCloud.single("images"), (req, res) => {
-  const images = req.file.secure_url;
+  if(req.file){
+    var images = req.file.secure_url;
+  }
   Recipe.create({ ...req.body, images })
     .then(recipe => {
       res.status(200).json({ recipe });
@@ -73,7 +75,7 @@ recipeRouter.get("/", (req, res) => {
 // get unique custom recipes
 recipeRouter.get("/:id", (req, res) => {
   const { id } = req.params;
-  Recipe.findById(id)
+  Recipe.findById(id).populate("author")
     .then(recipe => {
       res.status(200).json({ recipe });
     })
