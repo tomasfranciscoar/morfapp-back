@@ -10,7 +10,23 @@ const recipeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  ingredients: {
+  ingredient1: {
+    type: String,
+    required: true
+  },
+  ingredient2: {
+    type: String
+  },
+  ingredient3: {
+    type: String
+  },
+  ingredient4: {
+    type: String
+  },
+  ingredient5: {
+    type: String
+  },
+  instructions: {
     type: String,
     required: true
   },
@@ -21,10 +37,6 @@ const recipeSchema = new Schema({
   images: {
     type: String,
     default: "https://topekacivictheatre.com/wp-content/uploads/2019/01/no-image.jpg"
-  },
-  likes: {
-    type: Number,
-    default: 0
   }
 }, {
   timestamps: true
