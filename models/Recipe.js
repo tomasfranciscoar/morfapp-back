@@ -11,7 +11,7 @@ const recipeSchema = new Schema({
     ref: "User",
   },
   chips: {
-    type: [String],
+    type: Array,
     required: true
   },
   instructions: {
