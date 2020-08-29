@@ -5,22 +5,19 @@ const Comment = require("../models/Comment");
 const uploadCloud = require("../helpers/cloudinary-helper");
 const authUtils = require("../helpers/auth-helper");
 const User = require("../models/User");
-const ObjectId = require('mongodb').ObjectID;
+const ObjectId = require("mongodb").ObjectID;
 
 // add comment
 recipeRouter.post("/comment", (req, res) => {
-
-  console.log('el commento: ', req.body.comment)
-  if(req.body.comment === undefined || req.body.comment === "") return;
-
+  if (req.body.comment === undefined || req.body.comment === "") return;
   Comment.create({ ...req.body })
-    .then(comment => {
+    .then((comment) => {
       res.status(200).json({ comment });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "There was an error posting your comment"
+        message: "There was an error posting your comment",
       });
     });
 });
@@ -30,30 +27,30 @@ recipeRouter.get("/comment/:id", (req, res) => {
   const { id } = req.params;
   Comment.find({ recipe: id })
     .populate("author")
-    .then(comments => {
+    .then((comments) => {
       res.status(200).json({ comments });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "An error occurred while retrieving the comments"
+        message: "An error occurred while retrieving the comments",
       });
     });
 });
 
 // create new recipe
 recipeRouter.post("/new", uploadCloud.single("images"), (req, res) => {
-  if(req.file){
+  if (req.file) {
     var images = req.file.secure_url;
   }
   Recipe.create({ ...req.body, images })
-    .then(recipe => {
+    .then((recipe) => {
       res.status(200).json({ recipe });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "An error occurred while uploading the recipe"
+        message: "An error occurred while uploading the recipe",
       });
     });
 });
@@ -61,13 +58,13 @@ recipeRouter.post("/new", uploadCloud.single("images"), (req, res) => {
 // get custom recipes
 recipeRouter.get("/", (req, res) => {
   Recipe.find()
-    .then(recipe => {
+    .then((recipe) => {
       res.status(200).json({ recipe });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "An error occurred while retrieving the recipes"
+        message: "An error occurred while retrieving the recipes",
       });
     });
 });
@@ -75,14 +72,15 @@ recipeRouter.get("/", (req, res) => {
 // get unique custom recipes
 recipeRouter.get("/:id", (req, res) => {
   const { id } = req.params;
-  Recipe.findById(id).populate("author")
-    .then(recipe => {
+  Recipe.findById(id)
+    .populate("author")
+    .then((recipe) => {
       res.status(200).json({ recipe });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(404).json({
         error,
-        message: "An error occurred while retrieving the recipe"
+        message: "An error occurred while retrieving the recipe",
       });
     });
 });
@@ -91,13 +89,13 @@ recipeRouter.get("/:id", (req, res) => {
 recipeRouter.get("/myrecipes/:id", (req, res) => {
   const { id } = req.params;
   Recipe.find({ author: id })
-    .then(recipes => {
+    .then((recipes) => {
       res.status(200).json({ recipes });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(404).json({
         error,
-        message: "An error occure while retrieving your recipes"
+        message: "An error occure while retrieving your recipes",
       });
     });
 });
@@ -106,13 +104,13 @@ recipeRouter.get("/myrecipes/:id", (req, res) => {
 recipeRouter.patch("/:id", (req, res) => {
   const { id } = req.params;
   Recipe.findOneAndUpdate({ _id: id }, { $set: { ...req.body } }, { new: true })
-    .then(recipe => {
+    .then((recipe) => {
       res.status(200).json({ recipe });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "There was an error editing the recipe"
+        message: "There was an error editing the recipe",
       });
     });
 });
@@ -121,29 +119,29 @@ recipeRouter.patch("/:id", (req, res) => {
 recipeRouter.delete("/:id", authUtils.verifyToken, (req, res) => {
   const { id } = req.params;
   Recipe.findOneAndRemove({ _id: id })
-    .then(recipe => {
+    .then((recipe) => {
       res.status(200).json({ recipe });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "There was an error deleting the recipe"
+        message: "There was an error deleting the recipe",
       });
     });
 });
 
 recipeRouter.get("/favs/:id", (req, res) => {
   const { id } = req.params;
-  User.find({favs: {$in: [ObjectId(id)]}})
-    .then(users => {
-      res.status(200).json({users})
+  User.find({ favs: { $in: [ObjectId(id)] } })
+    .then((users) => {
+      res.status(200).json({ users });
     })
-    .catch(error => {
+    .catch((error) => {
       res.status(500).json({
         error,
-        message: "There was an error retrieving the favs"
+        message: "There was an error retrieving the favs",
       });
     });
-})
+});
 
 module.exports = recipeRouter;
